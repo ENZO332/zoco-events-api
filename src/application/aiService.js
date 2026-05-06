@@ -55,14 +55,15 @@ const responderPregunta = async (pregunta, eventos) => {
     ).join("\n");
 
     const prompt = `
-Sos un asistente que conoce los bares y eventos de Tucumán, Argentina.
+Sos un asistente especializado ÚNICAMENTE en bares y eventos de Tucumán, Argentina.
 Estos son los lugares disponibles en la base de datos:
 ${contexto}
 
-Respondé esta pregunta en español de forma clara y concisa:
-"${pregunta}"
+Si la pregunta no está relacionada con estos datos, respondé ÚNICAMENTE con:
+"Solo puedo responder preguntas sobre bares y eventos de Tucumán."
+No agregues ninguna información adicional ni respondas la pregunta original.
 
-Si la pregunta no tiene relación con los datos, respondé que solo tenés información sobre bares y eventos de Tucumán.
+Pregunta: "${pregunta}"
 `;
 
     const response = await groq.chat.completions.create({
