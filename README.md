@@ -6,7 +6,8 @@ API REST para gestión de bares y eventos de Tucumán con automatización, dedup
 
 - **Node.js + Express 4**
 - **MongoDB + Mongoose**
-- **Groq (LLaMA 3.1)** para detección de duplicados semánticos y normalización de direcciones
+- **Groq (LLaMA 3.1)** para detección de duplicados semánticos, normalización de direcciones y agente conversacional
+
 
 ## Arquitectura
 
@@ -15,7 +16,7 @@ El proyecto sigue una arquitectura en capas:
 routes → controllers → application → infrastructure → MongoDB
 
 - **routes**: define los endpoints
-- **controllers**: maneja requests y responses
+- **controllers**: maneja requests y responses HTTP
 - **application**: lógica de negocio y coordinación con IA
 - **infrastructure**: acceso a datos con Mongoose
 - **models**: esquemas de Mongoose que definen la estructura de los documentos en MongoDB
@@ -41,6 +42,11 @@ Iniciar el servidor:
 npm run dev
 ```
 
+## Deploy
+
+La API está deployada en Railway:
+https://zoco-events-api-production.up.railway.app
+
 ## Endpoints
 
 | Método | Ruta | Descripción |
@@ -50,6 +56,7 @@ npm run dev
 | POST | /events | Crear evento |
 | PUT | /events/:id | Editar evento |
 | DELETE | /events/:id | Desactivar evento (soft delete) |
+| POST | /events/ask | Consultar al agente IA |
 
 ## Automatización
 
@@ -66,12 +73,30 @@ El script:
 
 ## Uso de IA
 
-Se utiliza **Groq (LLaMA 3.1-8b-instant)** en dos funciones:
+Se utiliza **Groq (LLaMA 3.1-8b-instant)** en tres funciones:
 
 - **Detección de duplicados semánticos**: al crear un evento, la IA compara el nuevo registro contra los nombres existentes para detectar equivalencias semánticas.
-- **Normalización de direcciones**: las direcciones se normalizan automáticamente antes de guardarse
+- **Normalización de direcciones**: las direcciones se normalizan automáticamente antes de guardarse.
+- **Agente conversacional**: el endpoint `POST /events/ask` recibe una pregunta en lenguaje natural y responde usando los datos reales almacenados en la base. Ejemplo: `"¿Qué bares hay en Yerba Buena?"`
 
-Ambas funciones se aplican tanto en la carga automática como en la creación manual vía API.
+Las funciones de deduplicación y normalización se aplican tanto en la carga automática como en la creación manual vía API.
+
+## Ejemplo de consulta al agente IA
+
+```http
+POST https://zoco-events-api-production.up.railway.app/events/ask
+```
+
+Body:
+
+```json
+{
+  "question": "¿Qué bares hay en Yerba Buena?"
+}
+```
+
+## Manejo de errores
+La API usa un middleware global de errores con una clase `AppError` personalizada que centraliza el formato de respuesta y el status HTTP en toda la aplicación.
 
 ## Decisiones técnicas
 
