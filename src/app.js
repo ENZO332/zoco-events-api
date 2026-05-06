@@ -20,7 +20,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || "Error interno del servidor" });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor en puerto ${PORT}`);
 });
