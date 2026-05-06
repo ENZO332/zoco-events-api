@@ -1,0 +1,22 @@
+[
+  { "name": "Bar Irlanda", "location": "Av. Solano Vera 500, Tucumán", "category": "bar" },
+  { "name": "Irlanda Bar", "location": "Solano Vera 500, San Miguel de Tucumán", "category": "bar" },
+  { "name": "La Reserva", "location": "Av. Aconquija 1200, Yerba Buena", "category": "bar" },
+  { "name": "El Ángulo", "location": "Córdoba 456, Tucumán", "category": "bar" },
+  { "name": "Antares Tucumán", "location": "25 de Mayo 320, Tucumán", "category": "cervecería" },
+  { "name": "Ceviche Club", "location": "Mendoza 890, Tucumán", "category": "restorán" },
+  { "name": "La Leñita", "location": "Las Piedras 123, Tucumán", "category": "restorán" },
+  { "name": "Opio Bar", "location": "San Juan 780, Tucumán", "category": "bar" },
+  { "name": "Club de la Cerveza", "location": "Av. Mate de Luna 2100, Tucumán", "category": "cervecería" },
+  { "name": "Bourbon Street", "location": "Laprida 340, Tucumán", "category": "bar" },
+  { "name": "El Patio de la Quinta", "location": "Av. Belgrano 1500, Yerba Buena", "category": "restorán" },
+  { "name": "Mercado Soho", "location": "Muñecas 560, Tucumán", "category": "bar" },
+  { "name": "La Chopería", "location": "9 de Julio 900, Tucumán", "category": "cervecería" },
+  { "name": "Boliche Marabú", "location": "Av. Roca 700, Tucumán", "category": "boliche" },
+  { "name": "Café del Ángel", "location": "Santiago 230, Tucumán", "category": "café" },
+  { "name": "Temple Bar Tucumán", "location": "Av. Aconquija 1800, Yerba Buena", "category": "bar" },
+  { "name": "Beer Garden Tucumán", "location": "San Martín 850, Tucumán", "category": "cervecería" },
+  { "name": "La Taberna", "location": "Balcarce 220, Tucumán", "category": "bar" },
+  { "name": "Distrito Bar", "location": "Av. Mate de Luna 1500, Tucumán", "category": "bar" },
+  { "name": "Berlina Tucumán", "location": "Av. Aconquija 2100, Yerba Buena", "category": "cervecería" }
+]
