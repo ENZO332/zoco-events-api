@@ -15,6 +15,11 @@ mongoose.connect(process.env.MONGO_URI, {
 app.get("/", (req, res) => res.send("API funcionando"));
 app.use("/events", eventRoutes);
 
+app.use((err, req, res, next) => {
+  console.log(`[ERROR] ${err.status || 500} - ${err.message}`);
+  res.status(err.status || 500).json({ error: err.message || "Error interno del servidor" });
+});
+
 app.listen(3000, "0.0.0.0", () => {
   console.log("Servidor en puerto 3000");
 });

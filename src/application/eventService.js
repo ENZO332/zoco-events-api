@@ -1,5 +1,6 @@
 const eventRepository = require("../infrastructure/eventRepository");
 const aiService = require("./aiService");
+const AppError = require("../utils/AppError");
 
 const getAllEvents = () => eventRepository.findAll();
 
@@ -17,18 +18,18 @@ const createEvent = async (data) => {
   const exacto = allNames.some(
     n => n.toLowerCase() === eventName.toLowerCase()
   );
-  if (exacto) throw new Error("Ya existe un evento con ese nombre");
+  if (exacto) throw new AppError("Ya existe un evento con ese nombre", 409);
 
   //duplicado semántico
   const resultado = await aiService.detectarDuplicadoSemantico(eventName, allNames);
   if (resultado?.esDuplicado) {
-    throw new Error(`Posible duplicado semántico con '${resultado.coincidencia}'`);
+    throw new AppError(`Posible duplicado semántico con '${resultado.coincidencia}'`, 409);
   }
 
-  let locationName = data.location;
+  const locationName = data.location;
 
    // normalizar dirección con IA
-  const locationNormalizada = locationName;
+  let locationNormalizada = locationName;
 
   try {
     if (locationName) {
