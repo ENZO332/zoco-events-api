@@ -49,4 +49,29 @@ Dirección:
     return response.choices[0].message.content.trim();
 };
 
-module.exports = { detectarDuplicadoSemantico, normalizarDireccion };
+const responderPregunta = async (pregunta, eventos) => {
+    const contexto = eventos.map(e => 
+        `- ${e.name} | ${e.category} | ${e.location}`
+    ).join("\n");
+
+    const prompt = `
+Sos un asistente que conoce los bares y eventos de Tucumán, Argentina.
+Estos son los lugares disponibles en la base de datos:
+${contexto}
+
+Respondé esta pregunta en español de forma clara y concisa:
+"${pregunta}"
+
+Si la pregunta no tiene relación con los datos, respondé que solo tenés información sobre bares y eventos de Tucumán.
+`;
+
+    const response = await groq.chat.completions.create({
+        model: MODEL,
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.3
+    });
+
+    return response.choices[0].message.content.trim();
+};
+
+module.exports = { detectarDuplicadoSemantico, normalizarDireccion, responderPregunta };

@@ -57,4 +57,16 @@ const deleteEvent = async (req, res) => {
   }
 };
 
-module.exports = { getEvents, getEventById, createEvent, updateEvent, deleteEvent };
+const askAgentForEvent = async (req, res) => {
+  try {
+    const { question } = req.body;
+    if (!question) return res.status(400).json({ error: "Falta el campo 'question'" });
+    const respuesta = await eventService.askAgent(question);
+    res.json({ answer: respuesta });
+  } catch (error) {
+    console.log("ERROR:", error);
+    res.status(500).json({ error: "Error al procesar la pregunta" });
+  }
+};
+
+module.exports = { getEvents, getEventById, createEvent, updateEvent, deleteEvent, askAgentForEvent };

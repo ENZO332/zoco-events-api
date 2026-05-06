@@ -50,4 +50,9 @@ const updateEvent = (id, data) => eventRepository.update(id, data);
 
 const deleteEvent = (id) => eventRepository.deactivate(id);
 
-module.exports = { getAllEvents, getEventById, getEventByName, createEvent, updateEvent, deleteEvent };
+const askAgent = async (ask) => {
+  const events = await getAllEvents();
+  return aiService.responderPregunta(ask, events);
+};
+
+module.exports = { getAllEvents, getEventById, getEventByName, createEvent, updateEvent, deleteEvent, askAgent };
