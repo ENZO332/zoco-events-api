@@ -3,6 +3,8 @@ const eventService = require("../application/eventService");
 
 const log = (msg) => console.log(`[${new Date().toISOString()}] ${msg}`);
 
+const eventRepository = require("../infrastructure/eventRepository");
+
 const categoryMap = {
   "13003": "bar",
   "13059": "bar", 
@@ -28,6 +30,7 @@ const fetchBaresTucuman = async () => {
   return response.data.results;
 };
 
+
 const loadFromOSM = async () => {
   log("Iniciando carga desde Foursquare...");
 
@@ -43,23 +46,22 @@ const loadFromOSM = async () => {
     const categoriaId = lugar.categories?.[0]?.id?.toString();
     const categoria = categoryMap[categoriaId] || "bar";
 
-    try {
-      await eventService.createEvent({
-        name: nombre,
-        location: direccion,
-        category: categoria,
-        source: "foursquare"
-      });
-      log(`AGREGADO: "${nombre}"`);
-      agregados++;
-    } catch (error) {
-      if (error.message.includes("Ya existe") || error.message.includes("duplicado")) {
-        log(`DUPLICADO: "${nombre}" — omitido`);
-        duplicados++;
-      } else {
-        log(`ERROR con "${nombre}": ${error.message}`);
-      }
+    const existing = await eventRepository.findByName(nombre);
+    if (existing) {
+      log(`DUPLICADO: "${nombre}" — omitido`);
+      duplicados++;
+      continue;
     }
+
+    await eventRepository.create({
+      name: nombre,
+      location: direccion,
+      category: categoria,
+      source: "foursquare",
+      fetchedAt: new Date()
+    });
+    log(`AGREGADO: "${nombre}"`);
+    agregados++;
   }
 
   const resumen = `Finalizado — Agregados: ${agregados} | Duplicados: ${duplicados}`;
