@@ -70,8 +70,6 @@ Respondé SOLO con la categoría en minúsculas, sin texto adicional.
     return validas.includes(categoria) ? categoria : "bar";
 };
 
-module.exports = { detectarDuplicadoSemantico, normalizarDireccion, responderPregunta, clasificarLugar };
-
 const responderPregunta = async (pregunta, eventos) => {
     const contexto = eventos.map(e => 
         `- ${e.name} | ${e.category} | ${e.location}`
@@ -98,4 +96,4 @@ Pregunta: "${pregunta}"
     return response.choices[0].message.content.trim();
 };
 
-module.exports = { detectarDuplicadoSemantico, normalizarDireccion, responderPregunta };
+module.exports = { detectarDuplicadoSemantico, normalizarDireccion, responderPregunta, clasificarLugar };
