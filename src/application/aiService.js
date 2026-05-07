@@ -34,10 +34,11 @@ Respondé SOLO con un JSON con este formato, sin texto adicional ni backticks:
 const normalizarDireccion = async (direccion) => {
     const prompt = `
 Normalizá esta dirección de Tucumán, Argentina siguiendo estas reglas:
-- Conservá el nombre de la calle exactamente como está escrito
-- Solo corregí formato: mayúsculas, abreviaturas, orden (calle + número)
-- Si no hay nada que corregir, devolvé la dirección tal cual
-- Respondé SOLO con la dirección normalizada, sin explicaciones ni texto adicional
+- Conservá el nombre de la calle y el número exactamente como están
+- Solo corregí formato: mayúsculas, reemplazá guiones por comas
+- No agregues palabras como "Calle", "Avenida" salvo que estén en la dirección original
+- No modifiques ni inventes números
+- Respondé SOLO con la dirección normalizada, sin explicaciones
 
 Dirección: "${direccion}"
 `;
