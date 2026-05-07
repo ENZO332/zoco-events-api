@@ -1,75 +1,54 @@
-require("dotenv").config({ path: require("path").resolve(__dirname, "../../.env") });
-const mongoose = require("mongoose");
 const axios = require("axios");
 const eventService = require("../application/eventService");
 
 const log = (msg) => console.log(`[${new Date().toISOString()}] ${msg}`);
 
-const fetchBaresTucuman = async () => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-  const query = `
-    [out:json][timeout:25];
-    area[name="San Miguel de Tucumán"]->.searchArea;
-    (
-      node["amenity"="bar"](area.searchArea);
-      node["amenity"="pub"](area.searchArea);
-      node["amenity"="nightclub"](area.searchArea);
-      node["amenity"="cafe"](area.searchArea);
-      node["amenity"="restaurant"](area.searchArea);
-    );
-    out body;
-  `;
-
-    const response = await axios.post(
-        "https://overpass.kumi.systems/api/interpreter",
-        `data=${encodeURIComponent(query)}`,
-        { 
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            timeout: 30000
-        }
-    );
-
-  return response.data.elements;
+const categoryMap = {
+  "13003": "bar",
+  "13059": "bar", 
+  "13006": "boliche",
+  "13032": "café",
+  "13065": "restorán"
 };
 
-const categoryMap = {
-  bar: "bar",
-  pub: "bar",
-  nightclub: "boliche",
-  cafe: "café",
-  restaurant: "restorán"
+const fetchBaresTucuman = async () => {
+  const response = await axios.get("https://api.foursquare.com/v3/places/search", {
+    headers: {
+      Authorization: process.env.FOURSQUARE_API_KEY,
+      Accept: "application/json"
+    },
+    params: {
+      query: "bar",
+      near: "San Miguel de Tucumán, Argentina",
+      limit: 50,
+      categories: "13003,13059,13006,13032,13065"
+    }
+  });
+
+  return response.data.results;
 };
 
 const loadFromOSM = async () => {
-  log("Iniciando carga desde OSM...");
+  log("Iniciando carga desde Foursquare...");
 
-  const elementos = await fetchBaresTucuman();
-  log(`Obtenidos ${elementos.length} lugares desde OpenStreetMap`);
+  const lugares = await fetchBaresTucuman();
+  log(`Obtenidos ${lugares.length} lugares desde Foursquare`);
 
   let agregados = 0;
   let duplicados = 0;
-  let sinNombre = 0;
 
-  for (const el of elementos) {
-    const nombre = el.tags?.name;
-    if (!nombre) {
-      sinNombre++;
-      continue;
-    }
-
-    const direccion = el.tags?.["addr:street"]
-      ? `${el.tags["addr:street"]} ${el.tags["addr:housenumber"] || ""}`.trim()
-      : "Tucumán";
-
-    const categoria = categoryMap[el.tags?.amenity] || "bar";
+  for (const lugar of lugares) {
+    const nombre = lugar.name;
+    const direccion = lugar.location?.formatted_address || "Tucumán";
+    const categoriaId = lugar.categories?.[0]?.id?.toString();
+    const categoria = categoryMap[categoriaId] || "bar";
 
     try {
       await eventService.createEvent({
         name: nombre,
         location: direccion,
         category: categoria,
-        source: "osm"
+        source: "foursquare"
       });
       log(`AGREGADO: "${nombre}"`);
       agregados++;
@@ -83,9 +62,9 @@ const loadFromOSM = async () => {
     }
   }
 
-  const resumen = `Finalizado — Agregados: ${agregados} | Duplicados: ${duplicados} | Sin nombre: ${sinNombre}`;
+  const resumen = `Finalizado — Agregados: ${agregados} | Duplicados: ${duplicados}`;
   log(resumen);
-  return { agregados, duplicados, sinNombre };
+  return { agregados, duplicados };
 };
 
 module.exports = { loadFromOSM };
