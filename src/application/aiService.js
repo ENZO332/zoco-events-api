@@ -52,6 +52,24 @@ Dirección: "${direccion}"
     return response.choices[0].message.content.trim();
 };
 
+const clasificarLugar = async (nombre, descripcion = "") => {
+    const prompt = `
+Clasificá este lugar de Tucumán, Argentina en una de estas categorías: bar, restorán, café, boliche, cervecería.
+Nombre: "${nombre}"
+${descripcion ? `Descripción: "${descripcion}"` : ""}
+Respondé SOLO con la categoría en minúsculas, sin texto adicional.
+`;
+
+    const response = await groq.chat.completions.create({
+        model: MODEL,
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0
+    });
+    const categoria = response.choices[0].message.content.trim().toLowerCase();
+    const validas = ["bar", "restorán", "café", "boliche", "cervecería"];
+    return validas.includes(categoria) ? categoria : "bar";
+};
+
 const responderPregunta = async (pregunta, eventos) => {
     const contexto = eventos.map(e => 
         `- ${e.name} | ${e.category} | ${e.location}`
@@ -78,4 +96,4 @@ Pregunta: "${pregunta}"
     return response.choices[0].message.content.trim();
 };
 
-module.exports = { detectarDuplicadoSemantico, normalizarDireccion, responderPregunta };
+module.exports = { detectarDuplicadoSemantico, normalizarDireccion, responderPregunta, clasificarLugar };
