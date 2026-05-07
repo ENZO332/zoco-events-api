@@ -34,10 +34,13 @@ Respondé SOLO con un JSON con este formato, sin texto adicional ni backticks:
 const normalizarDireccion = async (direccion) => {
     const prompt = `
 Normalizá esta dirección de Tucumán, Argentina.
-Respondé SOLO con la dirección normalizada.
+Reglas:
+- Conservá el nombre de la calle exactamente como está escrito
+- Solo corregí formato: mayúsculas, abreviaturas, orden
+- Si no podés normalizar sin cambiar el nombre de la calle, devolvé la dirección original sin modificar
+- Respondé SOLO con la dirección normalizada, sin explicaciones
 
-Dirección:
-"${direccion}"
+Dirección: "${direccion}"
 `;
 
     const response = await groq.chat.completions.create({
