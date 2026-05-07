@@ -6,6 +6,8 @@ const eventService = require("../application/eventService");
 const log = (msg) => console.log(`[${new Date().toISOString()}] ${msg}`);
 
 const fetchBaresTucuman = async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
   const query = `
     [out:json][timeout:25];
     area[name="San Miguel de Tucumán"]->.searchArea;
