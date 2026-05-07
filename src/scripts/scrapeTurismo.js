@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const eventService = require("../application/eventService");
+const aiService = require("../application/aiService");
 
 const log = (msg) => console.log(`[${new Date().toISOString()}] ${msg}`);
 
@@ -47,10 +48,11 @@ const loadFromScraping = async () => {
 
   for (const bar of bares) {
     try {
+      const categoria = await aiService.clasificarLugar(bar.nombre);
       await eventService.createEvent({
         name: bar.nombre,
         location: bar.direccion,
-        category: "restorán",
+        category: categoria,
         source: "tucumanturismo"
       });
       log(`AGREGADO: "${bar.nombre}"`);
