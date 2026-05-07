@@ -80,15 +80,28 @@ El script:
 
 ## Fuente de datos
 
-Los datos se cargan mediante el script `src/scripts/loadBares.js`, que utiliza un dataset mock de bares y eventos de Tucumán (`src/data/bares.json`).
+Los datos se obtienen de dos fuentes:
 
-Durante el desarrollo se intentó integrar fuentes externas reales para automatizar la obtención de datos:
+- **Dataset mock** (`src/data/bares.json`): dataset local con bares de Tucumán para pruebas y carga inicial.
+- **Scraping de Tucumán Turismo** (`src/scripts/scrapeTurismo.js`): scraper que extrae bares y restaurantes del sitio oficial de turismo de la provincia.
 
-- **OpenStreetMap (Overpass API)**: se desarrolló una integración funcional, pero no pudo utilizarse debido a restricciones de red del entorno local durante las pruebas.
+Para ejecutar el scraping manualmente:
 
-- **Foursquare Places API**: se desarrolló una integración utilizando la API v3, pero el servicio fue deprecado durante el desarrollo del proyecto.
+```bash
+node src/scripts/scrapeTurismo.js
+```
 
-El código correspondiente a ambas integraciones se encuentra disponible en la rama `feature/api-integration` del repositorio.
+O vía endpoint (requiere servidor corriendo):
+
+```http
+POST /admin/scrape-turismo
+```
+
+Se intentaron además otras fuentes externas:
+- **OpenStreetMap (Overpass API)**: integración desarrollada pero descartada por restricciones de red.
+- **Foursquare Places API**: integración desarrollada pero el endpoint fue deprecado durante el proyecto.
+
+El código de ambas integraciones está disponible en la rama `feature/api-integration`.
 
 ## Uso de IA
 
