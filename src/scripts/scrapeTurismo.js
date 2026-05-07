@@ -16,14 +16,23 @@ const scrapeBares = async () => {
   const $ = cheerio.load(response.data);
   const bares = [];
 
+  const IGNORAR = [
+    "enlaces útiles",
+    "ente autárquico tucumán turismo",
+    "anexo ente tucumán turismo",
+    "casa de tucumánen buenos aires",
+    "casa de tucumán en buenos aires",
+    "placemakers"
+  ];
+
   $("strong").each((i, el) => {
     const nombre = $(el).text().trim();
     if (!nombre) return;
-
-    // buscar el primer <p> siguiente que contenga "Dirección:"
-    let direccion = "Tucumán";
+    if (IGNORAR.some(n => nombre.toLowerCase().includes(n.toLowerCase()))) return;
+    
+    let direccion = null;
     let siguiente = $(el).parent().next("p");
-
+    
     while (siguiente.length) {
       const texto = siguiente.text().trim();
       if (texto.startsWith("Dirección:")) {
@@ -33,7 +42,10 @@ const scrapeBares = async () => {
       if (texto.startsWith("Localidad:") || texto.startsWith("Horarios")) break;
       siguiente = siguiente.next("p");
     }
-
+  
+    // si no tiene dirección, no es un bar válido
+    if (!direccion) return;
+  
     bares.push({ nombre, direccion });
   });
 
