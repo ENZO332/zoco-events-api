@@ -26,6 +26,7 @@ const scrapeBares = async () => {
     // el siguiente texto del párrafo tiene la dirección
     const parrafo = $(el).parent();
     const textoCompleto = parrafo.text();
+    console.log("TEXTO:", JSON.stringify(textoCompleto.substring(0, 200)));
 
     // extraer dirección
     const dirMatch = textoCompleto.match(/Direcci[oó]n:\s*([^|]+?)(?=\s*Direcci[oó]n:|Localidad:|Horarios|Contacto|$)/);
