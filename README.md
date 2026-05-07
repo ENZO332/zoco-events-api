@@ -47,6 +47,14 @@ npm run dev
 La API está deployada en Railway:
 https://zoco-events-api-production.up.railway.app
 
+## Dashboard
+
+El dashboard frontend está disponible en:
+
+https://zoco-events-frontend.vercel.app
+
+Permite gestionar bares y eventos mediante una interfaz desarrollada en React. Incluye funcionalidades de listado, creación, edición y desactivación lógica de registros, además de consultas al agente IA utilizando lenguaje natural.
+
 ## Endpoints
 
 | Método | Ruta | Descripción |
