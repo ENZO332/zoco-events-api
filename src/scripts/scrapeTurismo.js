@@ -25,6 +25,8 @@ const scrapeBares = async () => {
 
     // el siguiente texto del párrafo tiene la dirección
     const parrafo = $(el).parent();
+    
+    console.log("HTML:", parrafo.parent().html()?.substring(0, 500));
     const textoCompleto = parrafo.text();
     console.log("TEXTO:", JSON.stringify(textoCompleto.substring(0, 200)));
 
