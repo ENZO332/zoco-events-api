@@ -28,7 +28,7 @@ const scrapeBares = async () => {
     const textoCompleto = parrafo.text();
 
     // extraer dirección
-    const dirMatch = textoCompleto.match(/Dirección:\s*([^\n]+)/);
+    const dirMatch = textoCompleto.match(/Direcci[oó]n:\s*([^|]+?)(?=\s*Direcci[oó]n:|Localidad:|Horarios|Contacto|$)/);
     const direccion = dirMatch ? dirMatch[1].trim() : "Tucumán";
 
     bares.push({ nombre, direccion });
