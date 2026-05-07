@@ -9,6 +9,9 @@ const getEventById = (id) => eventRepository.findById(id);
 const getEventByName = (name) => eventRepository.findByName(name);
 
 const createEvent = async (data) => {
+  if (!data.name?.trim()) throw new AppError("El nombre es obligatorio", 400);
+  if (!data.location?.trim()) throw new AppError("La dirección es obligatoria", 400);
+
   const eventName = data.name;
 
   const allEvents = await getAllEvents();

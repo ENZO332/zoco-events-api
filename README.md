@@ -8,7 +8,6 @@ API REST para gestión de bares y eventos de Tucumán con automatización, dedup
 - **MongoDB + Mongoose**
 - **Groq (LLaMA 3.1)** para detección de duplicados semánticos, normalización de direcciones y agente conversacional
 
-
 ## Arquitectura
 
 El proyecto sigue una arquitectura en capas:
@@ -79,6 +78,18 @@ El script:
 - Detecta duplicados semánticos con IA (ej: "Bar Irlanda" y "Irlanda Bar")
 - Registra cada operación con timestamp en consola
 
+## Fuente de datos
+
+Los datos se cargan mediante el script `src/scripts/loadBares.js`, que utiliza un dataset mock de bares y eventos de Tucumán (`src/data/bares.json`).
+
+Durante el desarrollo se intentó integrar fuentes externas reales para automatizar la obtención de datos:
+
+- **OpenStreetMap (Overpass API)**: se desarrolló una integración funcional, pero no pudo utilizarse debido a restricciones de red del entorno local durante las pruebas.
+
+- **Foursquare Places API**: se desarrolló una integración utilizando la API v3, pero el servicio fue deprecado durante el desarrollo del proyecto.
+
+El código correspondiente a ambas integraciones se encuentra disponible en la rama `feature/api-integration` del repositorio.
+
 ## Uso de IA
 
 Se utiliza **Groq (LLaMA 3.1-8b-instant)** en tres funciones:
@@ -93,11 +104,8 @@ Las funciones de deduplicación y normalización se aplican tanto en la carga au
 
 ```http
 POST https://zoco-events-api-production.up.railway.app/events/ask
-```
+Content-Type: application/json
 
-Body:
-
-```json
 {
   "question": "¿Qué bares hay en Yerba Buena?"
 }
@@ -126,3 +134,4 @@ Doble chequeo: primero exacto (case-insensitive, sin query extra a Mongo), luego
 **¿Cómo mejorarías la calidad de los datos?**
 - Validación de esquema en la entrada (Joi o Zod)
 - Sistema de aprobación manual antes de persistir
+- Embeddings vectoriales para detección de duplicados más precisa y escalable
