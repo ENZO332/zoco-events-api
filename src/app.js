@@ -33,6 +33,16 @@ app.post("/admin/load-osm", async (req, res) => {
   }
 });
 
+app.post("/admin/scrape-turismo", async (req, res) => {
+  try {
+    const { loadFromScraping } = require("./scripts/scrapeTurismo");
+    const resultado = await loadFromScraping();
+    res.json({ message: "Scraping completado", ...resultado });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor en puerto ${PORT}`);
